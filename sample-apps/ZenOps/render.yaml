@@ -1,0 +1,31 @@
+services:
+  # 1. Python Backend Service (FastAPI + Agent Pipeline)
+  - type: web
+    name: forgeops-backend
+    env: docker
+    region: oregon
+    dockerContext: sample-apps/ZenOps/backend
+    dockerfilePath: sample-apps/ZenOps/backend/Dockerfile
+    plan: free # Change to standard/pro for production
+    envVars:
+      - key: NITROCHAT_BASE_URL
+        value: "https://nitrochat-zenops-chat-6a64-zen-net-amrita-university-coimbatore.app.nitrocloud.ai"
+      - key: FORGEOPS_MCP_URL
+        # This will be updated automatically, but we can set a dummy one initially
+        value: "https://forgeops-mcp.onrender.com/mcp"
+      - key: FORGEOPS_MODEL
+        value: "google/gemini-3.5-flash-lite"
+      - key: FORGEOPS_LIVE_AGENTS
+        value: "true"
+
+  # 2. Nitrostack MCP Server Service (Node.js)
+  - type: web
+    name: forgeops-mcp
+    env: docker
+    region: oregon
+    dockerContext: sample-apps/ZenOps/forgeops-mcp
+    dockerfilePath: sample-apps/ZenOps/forgeops-mcp/Dockerfile
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: "production"
